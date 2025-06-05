@@ -11,14 +11,15 @@ resilience4j:
   circuitbreaker:
     instances:
       hotelRatingBreaker:
-        registerHealthIndicator: true
-        slidingWindowSize: 10
-        slidingWindowType: COUNT_BASED
-        failureRateThreshold: 50
-        waitDurationInOpenState: 10s    #	The time that the CircuitBreaker should wait before transitioning from open to half-open.
-        permittedNumberOfCallsInHalfOpenState: 3
-        minimumNumberOfCalls: 5
-        automaticTransitionFromOpenToHalfOpenEnabled: true
+        registerHealthIndicator: true                 # ✅ Enables actuator health endpoint for this circuit breaker
+        slidingWindowSize: 10                         # ✅ Monitors the last 10 calls to calculate failure rate
+        slidingWindowType: COUNT_BASED                # ✅ Uses count-based sliding window (not time-based)
+        failureRateThreshold: 50                      # ✅ Opens the circuit if 50% or more calls fail
+        waitDurationInOpenState: 10s                  # ✅ Waits 10 seconds in OPEN state before moving to HALF-OPEN
+        permittedNumberOfCallsInHalfOpenState: 3      # ✅ Allows 3 test calls in HALF-OPEN state
+        minimumNumberOfCalls: 5                       # ✅ Starts evaluating failures only after 5 calls are made
+        automaticTransitionFromOpenToHalfOpenEnabled: true  # ✅ Automatically moves from OPEN to HALF-OPEN after wait
+
 
 management:
   endpoints:
