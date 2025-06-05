@@ -10,13 +10,15 @@ spring:
 resilience4j:
   circuitbreaker:
     instances:
-      hotelServiceBreaker:
-        register-health-indicator: true
-        sliding-window-size: 5
-        minimum-number-of-calls: 5
-        failure-rate-threshold: 50
-        wait-duration-in-open-state: 10s
-        permitted-number-of-calls-in-half-open-state: 3
+      hotelRatingBreaker:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
 management:
   endpoints:
     web:
