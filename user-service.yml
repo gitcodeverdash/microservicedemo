@@ -13,6 +13,7 @@ resilience4j:
       hotelRatingBreaker:
         registerHealthIndicator: true
         slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
         failureRateThreshold: 50
         waitDurationInOpenState: 10s
         permittedNumberOfCallsInHalfOpenState: 3
