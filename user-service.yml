@@ -15,7 +15,7 @@ resilience4j:
         slidingWindowSize: 10
         slidingWindowType: COUNT_BASED
         failureRateThreshold: 50
-        waitDurationInOpenState: 10s
+        waitDurationInOpenState: 10s    #	The time that the CircuitBreaker should wait before transitioning from open to half-open.
         permittedNumberOfCallsInHalfOpenState: 3
         minimumNumberOfCalls: 5
         automaticTransitionFromOpenToHalfOpenEnabled: true
