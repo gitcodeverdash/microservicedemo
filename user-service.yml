@@ -5,7 +5,7 @@ server:
 
 spring:
   application:
-    name: USER-SERVICE
+    name: UserService
 
 resilience4j:
   thread-pool-bulkhead:
