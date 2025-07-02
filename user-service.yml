@@ -1,3 +1,4 @@
+
 server:
   port: 8081
   #error:
@@ -6,42 +7,42 @@ server:
 spring:
   application:
     name: UserService
-
-resilience4j:
-  thread-pool-bulkhead:
-    instances:
-      hotelRatingBreaker:
-        coreThreadPoolSize: 2
-        maxThreadPoolSize: 4
-        queueCapacity: 10
-
-  retry:
-    instances:
-      hotelRatingBreaker:
-        maxAttempts: 3
-        waitDuration: 1s
-        retryExceptions:
-          - java.lang.Exception
-
-  ratelimiter:
-    instances:
-      hotelRatingBreaker:
-        limitForPeriod: 5
-        limitRefreshPeriod: 10s
-        timeoutDuration: 0
-  
-  circuitbreaker:
-    instances:
-      hotelRatingBreaker:
-        registerHealthIndicator: true                 # ✅ Enables actuator health endpoint for this circuit breaker
-        slidingWindowSize: 10                         # ✅ Monitors the last 10 calls to calculate failure rate
-        slidingWindowType: COUNT_BASED                # ✅ Uses count-based sliding window (not time-based)
-        failureRateThreshold: 50                      # ✅ Opens the circuit if 50% or more calls fail
-        waitDurationInOpenState: 10s                  # ✅ Waits 10 seconds in OPEN state before moving to HALF-OPEN
-        permittedNumberOfCallsInHalfOpenState: 3      # ✅ Allows 3 test calls in HALF-OPEN state
-        minimumNumberOfCalls: 5                       # ✅ Starts evaluating failures only after 5 calls are made
-        automaticTransitionFromOpenToHalfOpenEnabled: true  # ✅ Automatically moves from OPEN to HALF-OPEN after wait
-
+#
+#resilience4j:
+#  thread-pool-bulkhead:
+#    instances:
+#      hotelRatingBreaker:
+#        coreThreadPoolSize: 2
+#        maxThreadPoolSize: 4
+#        queueCapacity: 10
+#
+#  retry:
+#    instances:
+#      hotelRatingBreaker:
+#        maxAttempts: 3
+#        waitDuration: 1s
+#        retryExceptions:
+#          - java.lang.Exception
+#
+#  ratelimiter:
+#    instances:
+#      hotelRatingBreaker:
+#        limitForPeriod: 5
+#        limitRefreshPeriod: 10s
+#        timeoutDuration: 0
+#  
+#  circuitbreaker:
+#    instances:
+#      hotelRatingBreaker:
+#        registerHealthIndicator: true                 # ✅ Enables actuator health endpoint for this circuit breaker
+#        slidingWindowSize: 10                         # ✅ Monitors the last 10 calls to calculate failure rate
+#        slidingWindowType: COUNT_BASED                # ✅ Uses count-based sliding window (not time-based)
+#        failureRateThreshold: 50                      # ✅ Opens the circuit if 50% or more calls fail
+#        waitDurationInOpenState: 10s                  # ✅ Waits 10 seconds in OPEN state before moving to HALF-OPEN
+#        permittedNumberOfCallsInHalfOpenState: 3      # ✅ Allows 3 test calls in HALF-OPEN state
+#        minimumNumberOfCalls: 5                       # ✅ Starts evaluating failures only after 5 calls are made
+#        automaticTransitionFromOpenToHalfOpenEnabled: true  # ✅ Automatically moves from OPEN to HALF-OPEN after wait
+#
 
 management:
   endpoints:
