@@ -5,4 +5,4 @@ server:
 
 spring:
   application:
-    name: hotel-service
+    name: HOTEL-SERVICE
