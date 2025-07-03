@@ -30,3 +30,9 @@ eureka:
     fetch-registry: true         # ✅ Fetches registry info from Eureka
     service-url:
       defaultZone: http://localhost:8761/eureka/   # ✅ Eureka server location
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
