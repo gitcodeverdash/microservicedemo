@@ -1,6 +1,10 @@
 server:
   port: 8084
 
+spring:
+  application:
+    name: api-gateway-service
+
   main:
     web-application-type: reactive
 
@@ -44,7 +48,6 @@ server:
 
 resilience4j:
   circuitbreaker:
-    # ✅ Define common config FIRST
     configs:
       default:
         registerHealthIndicator: true
@@ -55,7 +58,6 @@ resilience4j:
         failureRateThreshold: 50
         waitDurationInOpenState: 10s
 
-    # ✅ Use the shared config
     instances:
       userCircuitBreaker:
         baseConfig: default
