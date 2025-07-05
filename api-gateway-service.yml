@@ -1,0 +1,70 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: api-gateway-service
+
+  main:
+    web-application-type: reactive  # ✅ Avoid Spring MVC conflict
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+
+          routes:
+            - id: user-service
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/user/**
+              filters:
+                - name : CircuitBreaker
+                  args:
+                    name : userCircuitBreaker
+                    fallbackUri: forward:/fallback/user
+
+
+            - id: rating-service
+              uri: lb://RATING-SERVICE
+              predicates:
+                - Path=/rating/**
+
+            - id: hotel-service
+              uri: lb://HOTEL-SERVICE
+              predicates:
+                - Path=/hotel/**
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      userCircuitBreaker:
+        slidingWindowSize: 5
+        minimumNumberOfCalls: 2
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping: DEBUG
+    reactor.netty: DEBUG
