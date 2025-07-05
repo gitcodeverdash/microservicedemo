@@ -1,47 +1,52 @@
 server:
   port: 8084
 
-spring:
-  application:
-    name: api-gateway-service
-
   main:
-    web-application-type: reactive  # ✅ Avoid Spring MVC conflict
+    web-application-type: reactive
 
   cloud:
     gateway:
-      server:
-        webflux:
-          discovery:
-            locator:
-              enabled: true
-              lower-case-service-id: true
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
 
-          routes:
-            - id: user-service
-              uri: lb://USER-SERVICE
-              predicates:
-                - Path=/user/**
-              filters:
-                - name : CircuitBreaker
-                  args:
-                    name : userCircuitBreaker
-                    fallbackUri: forward:/fallback/user
+      routes:
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: userCircuitBreaker
+                fallbackUri: forward:/fallback/user
 
+        - id: rating-service
+          uri: lb://RATING-SERVICE
+          predicates:
+            - Path=/rating/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: ratingCircuitBreaker
+                fallbackUri: forward:/fallback/rating
 
-            - id: rating-service
-              uri: lb://RATING-SERVICE
-              predicates:
-                - Path=/rating/**
+        - id: hotel-service
+          uri: lb://HOTEL-SERVICE
+          predicates:
+            - Path=/hotel/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: hotelCircuitBreaker
+                fallbackUri: forward:/fallback/hotel
 
-            - id: hotel-service
-              uri: lb://HOTEL-SERVICE
-              predicates:
-                - Path=/hotel/**
 resilience4j:
   circuitbreaker:
-    instances:
-      userCircuitBreaker:
+    # ✅ Define common config FIRST
+    configs:
+      default:
         registerHealthIndicator: true
         slidingWindowSize: 5
         slidingWindowType: COUNT_BASED
@@ -50,6 +55,14 @@ resilience4j:
         failureRateThreshold: 50
         waitDurationInOpenState: 10s
 
+    # ✅ Use the shared config
+    instances:
+      userCircuitBreaker:
+        baseConfig: default
+      ratingCircuitBreaker:
+        baseConfig: default
+      hotelCircuitBreaker:
+        baseConfig: default
 
 eureka:
   instance:
