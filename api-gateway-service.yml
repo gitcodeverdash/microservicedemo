@@ -1,10 +1,6 @@
 server:
   port: 8084
 
-spring:
-  application:
-    name: api-gateway-service
-
   main:
     web-application-type: reactive
 
@@ -25,6 +21,9 @@ spring:
               args:
                 name: userCircuitBreaker
                 fallbackUri: forward:/fallback/user
+            - name: Bulkhead
+              args:
+                name: userBulkhead  # ✅ Corrected
 
         - id: rating-service
           uri: lb://RATING-SERVICE
@@ -35,6 +34,9 @@ spring:
               args:
                 name: ratingCircuitBreaker
                 fallbackUri: forward:/fallback/rating
+            - name: Bulkhead
+              args:
+                name: ratingBulkhead  # ✅ Corrected
 
         - id: hotel-service
           uri: lb://HOTEL-SERVICE
@@ -45,6 +47,9 @@ spring:
               args:
                 name: hotelCircuitBreaker
                 fallbackUri: forward:/fallback/hotel
+            - name: Bulkhead
+              args:
+                name: hotelBulkhead  # ✅ Corrected
 
 resilience4j:
   circuitbreaker:
@@ -64,6 +69,20 @@ resilience4j:
       ratingCircuitBreaker:
         baseConfig: default
       hotelCircuitBreaker:
+        baseConfig: default
+
+  bulkhead:
+    configs:
+      default:
+        maxConcurrentCalls: 10
+        maxWaitDuration: 500ms
+
+    instances:
+      userBulkhead:
+        baseConfig: default
+      ratingBulkhead:
+        baseConfig: default
+      hotelBulkhead:
         baseConfig: default
 
 eureka:
@@ -86,3 +105,4 @@ logging:
     org.springframework.cloud.gateway: DEBUG
     org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping: DEBUG
     reactor.netty: DEBUG
+
